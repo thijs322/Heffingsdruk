@@ -1,0 +1,41 @@
+<form action="/" method="post" class="form" id="myForm">
+    <section id="sect_example1" class="mt-4 float-left col-12">
+        <h3>General</h3>
+        <div class="form-group">
+            {{ form.name.label }}
+            {% if form.name.description %}
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
+               title="{{ form.name.description }}"></i>
+            {% endif %}
+            {{ form.name(class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.number1.label }}
+            {% if form.number1.description %}
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
+                title="{{ form.number1.description }}"></i>
+            {% endif %}
+            {{ form.number1(class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.number2.label }}
+            {% if form.number2.description %}
+            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
+                title="{{ form.number2.description }}"></i>
+            {% endif %}
+            {{ form.number2(class_="form-control") }}
+        </div>
+    </section>
+    {{ form.csrf_token }}
+    <div class="button-container fixed-bottom mb-2 mr-2">
+        <button type='submit' value='Submit form' class="btn btn-primary btn-lg  float-right" id="submit-button">
+            Submit
+        </button>
+        <button type='reset' value='Reset form' class="btn btn-light btn-lg float-right mr-2" id="reset-button">
+            Reset
+        </button>
+    </div>
+</form>
+{% if results %}
+{% include 'results.html' %}
+{% endif %}

@@ -1,0 +1,9 @@
+Flask>=1.0.2
+Flask_Bootstrap>=3.3.7.1
+Flask_DebugToolbar>=0.10.1
+Flask_WTF>=0.14.2
+numpy>=1.15.3
+pandas>=0.23.4
+plotly==4.0.0
+WTForms>=2.2.1
+WTForms_ParsleyJS>=2.0.1
