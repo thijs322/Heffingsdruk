@@ -3,6 +3,7 @@ from forms.default import DefaultForm
 import os
 from resources.utils import get_next_ten_numbers
 from resources.plots import create_plot
+from src.calculate_tax import Persoon, Voertuig, Belasting, Calculation
 
 
 def create_app():
@@ -48,4 +49,12 @@ def show_page2():
 
 if __name__ == '__main__':
     # start the app
+    boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
+    auto = Voertuig(boris, '85tdpv', 2500, 20000)
+    tax = Belasting(boris, auto, 2, 0)
+    resultaat = Calculation(boris, auto, tax)
+    resultaat.get_auto()
+    resultaat.get_loon()
+    resultaat.get_BTW()
+    resultaat.show('both')
     app.run(debug=True)

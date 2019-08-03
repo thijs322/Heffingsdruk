@@ -5,6 +5,7 @@ import time
 import string
 import datetime
 import openpyxl
+from pathlib import Path
 import os
 import matplotlib.pyplot as plt
 import ssl
@@ -25,22 +26,21 @@ resultaat = Calculation(boris,auto,tax)
 
 class Persoon:
 
-    def __init__(self, postcode, leeftijd, bruto_loon_mnd, bonus, uitgaven_laag, uitgaven_hoog, spaargeld, schulden,
-                 verbruik_gas, verbruik_stroom, verbruik_water):
-        params_init = locals()
-        params = check_input(params_init, [0], range(1, 11))
+    def __init__(
+        self, postcode: str, leeftijd:int, bruto_loon_mnd:int, bonus:int, uitgaven_laag:int, uitgaven_hoog:int,
+        spaargeld:int, schulden:int, verbruik_gas:int, verbruik_stroom:int, verbruik_water:int):
 
-        self.postcode = params['postcode']
-        self.leeftijd = params['leeftijd']
-        self.bruto_loon_mnd = params['bruto_loon_mnd']
-        self.bonus = params['bonus']
-        self.uitgaven_laag = params['uitgaven_laag'] * 12
-        self.uitgaven_hoog = params['uitgaven_hoog'] * 12
-        self.spaargeld = params['spaargeld']
-        self.schulden = params['schulden']
-        self.verbruik_gas = params['verbruik_gas']
-        self.verbruik_stroom = params['verbruik_stroom']
-        self.verbruik_water = params['verbruik_water']
+        self.postcode = postcode
+        self.leeftijd = leeftijd
+        self.bruto_loon_mnd = bruto_loon_mnd
+        self.bonus = bonus
+        self.uitgaven_laag = uitgaven_laag * 12
+        self.uitgaven_hoog = uitgaven_hoog * 12
+        self.spaargeld = spaargeld
+        self.schulden = schulden
+        self.verbruik_gas = verbruik_gas
+        self.verbruik_stroom = verbruik_stroom
+        self.verbruik_water = verbruik_water
         self.bruto_loon_jr = self.bruto_loon_mnd * 12
         self.vakantiegeld = self.bruto_loon_jr * 0.08
         self.roken = 0
@@ -76,14 +76,11 @@ class Persoon:
 
 class Voertuig:
 
-    def __init__(self, persoon, kenteken, prijs, km_jaar):
-        params_init = locals()
-        params = check_input(params_init, [1], [2, 3])
-
+    def __init__(self, persoon:str, kenteken:int, prijs:int, km_jaar:int):
         self.persoon = persoon
-        self.kenteken = params['kenteken']
-        self.prijs = params['prijs']
-        self.km_jaar = params['km_jaar']
+        self.kenteken = kenteken
+        self.prijs = prijs
+        self.km_jaar = km_jaar
 
         # Zorg ervoor dat het kenteken 6 of 8 (met streepjes ertussen) tekens lang is
         if not (len(self.kenteken) != 8 or len(self.kenteken) != 6):
@@ -210,7 +207,7 @@ class Belasting:
         if not os.path.abspath(url_opcenten_name):
             urllib.request.urlretrieve(url_opcenten, url_opcenten_name)
 
-        wb = openpyxl.load_workbook(os.path.abspath(url_name))['Gegevens per gemeente']
+        wb = openpyxl.load_workbook(Path(__file__).parent / url_name)['Gegevens per gemeente']
         if self.huishouden_personen > 1:
             col = ['I', 'N', 'S']
         else:
@@ -223,7 +220,7 @@ class Belasting:
                 break
 
         # Opcenten
-        wb = openpyxl.load_workbook(os.path.abspath(url_opcenten_name))['Gegevens per provincie']
+        wb = openpyxl.load_workbook(Path(__file__).parent / url_opcenten_name)['Gegevens per provincie']
         for row in range(6, 18):
             if wb['B' + str(row)].value == self.persoon.provincie:
                 self.opcenten = round(wb['C' + str(row)].value / 100, 4)
@@ -235,9 +232,9 @@ class Belasting:
 
         self.loonbelasting_schaal = [
             0,
-            int(regex_lookup("rmkrnpakgd.*?t\/m € (.*?)<\/p>", html).replace('.', '')),
-            int(regex_lookup("bdoeboonge.*?t\/m € (.*?)<\/p>", html).replace('.', '')),
-            int(regex_lookup("eablhjemgh.*?t\/m € (.*?)<\/p>", html).replace('.', ''))
+            int(regex_lookup("rmkrnpakgd.*?t\/m € (.*?)<\/p>", html).replace('.', '')),
+            int(regex_lookup("bdoeboonge.*?t\/m € (.*?)<\/p>", html).replace('.', '')),
+            int(regex_lookup("eablhjemgh.*?t\/m € (.*?)<\/p>", html).replace('.', ''))
         ]
         self.loonbelasting = [
             float(regex_lookup("obcfqdbaga\">(.*?)%", html).replace(',', '.')) / 100,
@@ -551,7 +548,7 @@ def regex_lookup(regex_string, data_to_search):
     """
     reg = re.compile(r"" + regex_string + "", re.DOTALL)
     data = reg.search(data_to_search)
-    return data.group(1)
+    return data.group(1) if data else '0'
 
 
 def regex_lookup_nogroup(regex_string, data_to_search):
@@ -599,52 +596,12 @@ def find_row(table, var):
                 return row
 
 
-def check_input(arguments, str_idx, int_idx):
-    """
-    Checkt de input types van verschillende argumenten (str of int)
-    Mocht er een argument niet het juiste input type zijn moet deze meteen worden aangepast, hier wordt om gevraagd
-
-    :param arguments:   Alle argumenten die je invoert in de functie of class
-    :param str_idx:     De index nummers van argumenten die je wil checken op type 'str'
-    :param int_idx:     De index nummers van argumenten die je wil checken op type 'int'
-    :return:            De kloppende lijst van argumenten
-    """
-    arg_list_keys = list(arguments.keys())[1:]  # don't include self
-    arg_list_values = list(arguments.values())[1:]
-    for idx in str_idx:
-        while True:
-            if type(arg_list_values[idx]) == str:
-                break
-            else:
-                arg_list_values[idx] = input(
-                    'Value \'{}\' of variable \'{}\' is not the correct type. Please insert letters only >>> '.format(
-                        arg_list_values[idx], arg_list_keys[idx]))
-                arguments[arg_list_keys[idx]] = arg_list_values[idx]
-                continue
-    print('Checked all strings\n')
-    for idx in int_idx:
-        while True:
-            if type(arg_list_values[idx]) == int:
-                break
-            else:
-                arg_list_values[idx] = input(
-                    'Value \'{}\' of variable \'{}\' is not the correct type. Please insert numbers only >>> '.format(
-                        arg_list_values[idx], arg_list_keys[idx]))
-                try:
-                    arg_list_values[idx] = int(arg_list_values[idx])
-                    arguments[arg_list_keys[idx]] = arg_list_values[idx]
-                    break
-                except ValueError:
-                    continue
-    print('Checked all ints\n')
-    return arguments
-
-
-boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
-auto = Voertuig(boris, '85tdpv', 2500, 20000)
-tax = Belasting(boris, auto, 2, 0)
-resultaat = Calculation(boris, auto, tax)
-resultaat.get_auto()
-resultaat.get_loon()
-resultaat.get_BTW()
-resultaat.show('both')
+if __name__ == '__main__':
+    boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
+    auto = Voertuig(boris, '85tdpv', 2500, 20000)
+    tax = Belasting(boris, auto, 2, 0)
+    resultaat = Calculation(boris, auto, tax)
+    resultaat.get_auto()
+    resultaat.get_loon()
+    resultaat.get_BTW()
+    resultaat.show('both')
