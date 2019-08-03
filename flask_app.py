@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 from forms.default import DefaultForm
 import os
 from resources.utils import get_next_ten_numbers
-from resources.plots import create_plot
+from resources.plots import create_plot, make_sankey
 from src.calculate_tax import Persoon, Voertuig, Belasting, Calculation
 
 
@@ -16,6 +16,19 @@ def create_app():
 
 
 app = create_app()
+
+def get_results(data):
+    # start the app
+    mens = Persoon(**data)
+    auto = Voertuig(mens, **data)
+    tax = Belasting(mens, auto, **data)
+    resultaat = Calculation(mens, auto, tax)
+    resultaat.get_auto()
+    resultaat.get_loon()
+    resultaat.get_BTW()
+    # resultaat.show('both')
+    return resultaat.results()
+
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
@@ -36,17 +49,10 @@ def main_page():
         data['submitted'] = True  # Add hardcoded variables, for example to show whether the form has already been submitted
 
         # Process input with logic
-        mens = Persoon(**data)
-        auto = Voertuig(mens, **data)
-        tax = Belasting(mens, auto, **data)
-        resultaat = Calculation(mens, auto, tax)
-        resultaat.get_auto()
-        resultaat.get_loon()
-        resultaat.get_BTW()
-        #resultaat.show('both')
-
-        data['number_range'] = get_next_ten_numbers(data['uitgaven_laag'])
-        plots['example_plot'] = create_plot(data['uitgaven_hoog'])
+        data['number_range'] = get_next_ten_numbers(data['number2'])
+        plots['example_plot'] = create_plot(data['number1'])
+        data['results'] =  get_results()
+        plots['sankey_plot'] =  make_sankey(data['results'])
 
     data['errors'] = form.get_errors()  # Relay errors, can be usefull for debugging
 
@@ -55,6 +61,7 @@ def main_page():
 @app.route('/page2')
 def show_page2():
     return render_template('page2.html', title='Page2')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

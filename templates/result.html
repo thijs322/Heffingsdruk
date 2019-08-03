@@ -1,21 +1,11 @@
 {% if data.submitted %}
 <br />
 <br />
-<p>
-    Alright your name is {{ data.name }} and you picked numbers {{ data.number1 }} and {{ data.number2 }}
-</p>
-<p>
-    The next ten numbers of number 2 are
 
-    {% for number in data.number_range %}
-        {{ number }},
-    {% endfor %}
-</p>
-
-<div class="chart" id="bargraph">
+<div class="chart" id="sankeygraph">
         <script>
-            var graph = {{ plots.example_plot | safe }};
-            Plotly.plot('bargraph', graph, {});
+            var graph = {{ plots.sankey_plot | safe }};
+            Plotly.plot('sankeygraph', graph, {});
         </script>
 </div>
 

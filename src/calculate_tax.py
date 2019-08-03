@@ -7,7 +7,7 @@ import datetime
 import openpyxl
 from pathlib import Path
 import os
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import ssl
 
 '''
@@ -368,7 +368,7 @@ class Calculation:
 
     # Roken / Alcohol
     # self.rokenalcohol = 52*(self.persoon.roken*self.belasting.roken_accijns*6.50 + self.persoon.alcohol*self.belasting.alcohol_accijns*0.3)*1.21
-    print('Calculated roken/alcohol')
+    # print('Calculated roken/alcohol')
 
     def get_auto(self):
         """
@@ -481,24 +481,8 @@ class Calculation:
         self.inkomstenbelasting = self.loontaks - (self.heffingskorting + self.arbeidskorting) - self.premievolk
         print('Calculated loon')
 
-    # Figure
-    def show(self, chart_format):
-        while True:
-            if chart_format.lower() != 'relative':
-                if chart_format.lower() != 'absolute':
-                    if chart_format.lower() != 'both':
-                        chart_format = input(
-                            'Please give input \'relative\' or \'absolute\' or \'both\' for chart format >>>')
-                        continue
-                    else:
-                        break
-                else:
-                    break
-            else:
-                break
-        self.taks_alles = self.inkomstenbelasting + self.premievolk + self.btw + self.belasting.rioolheffing + \
-                          self.belasting.afvalheffing + self.belasting.OZB + self.brandstof_accijns + \
-                          self.belasting.MRB + self.loontaks_speciaal + self.vermogensbelasting
+    # Results
+    def results(self):
         self.taks_pie_array = [self.inkomstenbelasting, self.premievolk, self.btw_laag, self.btw_hoog,
                                self.belasting.rioolheffing, self.belasting.afvalheffing, self.belasting.OZB,
                                self.brandstof_accijns, self.belasting.MRB, self.loontaks_speciaal,
@@ -516,26 +500,64 @@ class Calculation:
         for i in range(len(self.taks_dict_sort)):
             self.taks_dict[self.taks_dict_sort[i][0]] = self.taks_dict_sort[i][1]
 
-        self.taks_ratio = self.taks_alles / self.persoon.loon_totaal
+        return self.taks_dict
 
-        print('Made data arrays.\nGenerating pie plot...')
 
-        if chart_format.lower() == 'relative':
-            chart_format = '%1.1f%%'
-        elif chart_format.lower() == 'absolute':
-            chart_format = lambda p: '{:.0f}'.format((p * self.taks_alles) / 100)
-        else:  # show both
-            chart_format = lambda p: '{:.0f} ({:.2f}%)'.format((p * self.taks_alles) / 100, p)
+    # Figure
+    # def show(self, chart_format):
+    #     while True:
+    #         if chart_format.lower() != 'relative':
+    #             if chart_format.lower() != 'absolute':
+    #                 if chart_format.lower() != 'both':
+    #                     chart_format = input(
+    #                         'Please give input \'relative\' or \'absolute\' or \'both\' for chart format >>>')
+    #                     continue
+    #                 else:
+    #                     break
+    #             else:
+    #                 break
+    #         else:
+    #             break
+    #     self.taks_alles = self.inkomstenbelasting + self.premievolk + self.btw + self.belasting.rioolheffing + \
+    #                       self.belasting.afvalheffing + self.belasting.OZB + self.brandstof_accijns + \
+    #                       self.belasting.MRB + self.loontaks_speciaal + self.vermogensbelasting
+    #     self.taks_pie_array = [self.inkomstenbelasting, self.premievolk, self.btw_laag, self.btw_hoog,
+    #                            self.belasting.rioolheffing, self.belasting.afvalheffing, self.belasting.OZB,
+    #                            self.brandstof_accijns, self.belasting.MRB, self.loontaks_speciaal,
+    #                            self.vermogensbelasting]
+    #     self.taks_pie_labels = ['Inkomensbelasting - kortingen', 'Premie volksverzekeringen', 'BTW laag', 'BTW hoog',
+    #                             'Rioolheffing', 'Afvalstoffenheffing', 'OZB (Indirect)', 'Accijns op brandstof',
+    #                             'Motorrijtuigen', 'Belasting op bonussen en vakantiegeld', 'Vermogensbelasting']
+    #     self.taks_dict = {}
+    #     for i in range(len(self.taks_pie_array)):
+    #         self.taks_dict[self.taks_pie_labels[i]] = self.taks_pie_array[i]
+    #     self.taks_dict_sort = sorted(self.taks_dict.items(), key=lambda x: x[1])  # sort descending
 
-        fig1, ax1 = plt.subplots()
-        ax1.pie(list(self.taks_dict.values()), labels=list(self.taks_dict.keys()), autopct=chart_format)
-        ax1.axis('equal')
-        title_string = ('Totale jaarlijkse belasting: {} euro = {}%'.format(round(self.taks_alles, 2),
-                                                                            round(self.taks_ratio * 100, 2)))
-        plt.title(title_string)
-        plt.show()
+    #     # Chance list back to dict
+    #     self.taks_dict = {}
+    #     for i in range(len(self.taks_dict_sort)):
+    #         self.taks_dict[self.taks_dict_sort[i][0]] = self.taks_dict_sort[i][1]
 
-        print('Finished')
+    #     self.taks_ratio = self.taks_alles / self.persoon.loon_totaal
+
+    #     print('Made data arrays.\nGenerating pie plot...')
+
+    #     if chart_format.lower() == 'relative':
+    #         chart_format = '%1.1f%%'
+    #     elif chart_format.lower() == 'absolute':
+    #         chart_format = lambda p: '{:.0f}'.format((p * self.taks_alles) / 100)
+    #     else:  # show both
+    #         chart_format = lambda p: '{:.0f} ({:.2f}%)'.format((p * self.taks_alles) / 100, p)
+
+    #     fig1, ax1 = plt.subplots()
+    #     ax1.pie(list(self.taks_dict.values()), labels=list(self.taks_dict.keys()), autopct=chart_format)
+    #     ax1.axis('equal')
+    #     title_string = ('Totale jaarlijkse belasting: {} euro = {}%'.format(round(self.taks_alles, 2),
+    #                                                                         round(self.taks_ratio * 100, 2)))
+    #     plt.title(title_string)
+    #     plt.show()
+
+    #     print('Finished')
 
 
 def regex_lookup(regex_string, data_to_search):
@@ -596,12 +618,13 @@ def find_row(table, var):
                 return row
 
 
-if __name__ == '__main__':
-    boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
-    auto = Voertuig(boris, '85tdpv', 2500, 20000)
-    tax = Belasting(boris, auto, 2, 0)
-    resultaat = Calculation(boris, auto, tax)
-    resultaat.get_auto()
-    resultaat.get_loon()
-    resultaat.get_BTW()
-    resultaat.show('both')
+# if __name__ == '__main__':
+    # boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
+    # auto = Voertuig(boris, '85tdpv', 2500, 20000)
+    # tax = Belasting(boris, auto, 2, 0)
+    # resultaat = Calculation(boris, auto, tax)
+    # resultaat.get_auto()
+    # resultaat.get_loon()
+    # resultaat.get_BTW()
+    # # resultaat.show('both')
+    # resultaat.taks_dict()
