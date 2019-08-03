@@ -5,7 +5,7 @@
             {{ form.name.label }}
             {% if form.name.description %}
             <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
-               title="{{ form.name.description }}"></i>
+                title="{{ form.name.description }}"></i>
             {% endif %}
             {{ form.name(class_="form-control") }}
         </div>
@@ -25,6 +25,8 @@
             {% endif %}
             {{ form.number2(class_="form-control") }}
         </div>
+        <p>Kies provincie:</p>
+        {{ form.provincie(class_="form-control")}}
     </section>
     {{ form.csrf_token }}
     <div class="button-container fixed-bottom mb-2 mr-2">
