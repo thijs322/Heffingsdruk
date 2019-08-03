@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 from forms.default import DefaultForm
 import os
 from resources.utils import get_next_ten_numbers
-from resources.plots import create_plot
+from resources.plots import create_plot, make_sankey
 from src.calculate_tax import Persoon, Voertuig, Belasting, Calculation
 
 
@@ -52,6 +52,7 @@ def main_page():
         data['number_range'] = get_next_ten_numbers(data['number2'])
         plots['example_plot'] = create_plot(data['number1'])
         data['results'] =  get_results()
+        plots['sankey_plot'] =  make_sankey(data['results'])
 
     data['errors'] = form.get_errors()  # Relay errors, can be usefull for debugging
 
