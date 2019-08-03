@@ -1,32 +1,16 @@
 <form action="/" method="post" class="form" id="myForm">
     <section id="sect_example1" class="mt-4 float-left col-12">
-        <h3>General</h3>
+        <h3>Vul de gegevens in om uw belasting te berekenen.</h3>
+        {% for f in form.form_fields %}
         <div class="form-group">
-            {{ form.name.label }}
-            {% if form.name.description %}
+            {{ f.label }}
+            {% if f.name.description %}
             <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
                 title="{{ form.name.description }}"></i>
             {% endif %}
-            {{ form.name(class_="form-control") }}
+            {{ f(class_="form-control") }}
         </div>
-        <div class="form-group">
-            {{ form.number1.label }}
-            {% if form.number1.description %}
-            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
-                title="{{ form.number1.description }}"></i>
-            {% endif %}
-            {{ form.number1(class_="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.number2.label }}
-            {% if form.number2.description %}
-            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"
-                title="{{ form.number2.description }}"></i>
-            {% endif %}
-            {{ form.number2(class_="form-control") }}
-        </div>
-        <p>Kies provincie:</p>
-        {{ form.provincie(class_="form-control")}}
+        {% endfor %}
     </section>
     {{ form.csrf_token }}
     <div class="button-container fixed-bottom mb-2 mr-2">

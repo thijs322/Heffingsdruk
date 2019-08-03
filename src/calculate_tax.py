@@ -28,7 +28,7 @@ class Persoon:
 
     def __init__(
         self, postcode: str, leeftijd:int, bruto_loon_mnd:int, bonus:int, uitgaven_laag:int, uitgaven_hoog:int,
-        spaargeld:int, schulden:int, verbruik_gas:int, verbruik_stroom:int, verbruik_water:int):
+        spaargeld:int, schulden:int, verbruik_gas:int, verbruik_stroom:int, verbruik_water:int, **kwargs):
 
         self.postcode = postcode
         self.leeftijd = leeftijd
@@ -76,7 +76,7 @@ class Persoon:
 
 class Voertuig:
 
-    def __init__(self, persoon:str, kenteken:int, prijs:int, km_jaar:int):
+    def __init__(self, persoon:str, kenteken:int, prijs:int, km_jaar:int, **kwargs):
         self.persoon = persoon
         self.kenteken = kenteken
         self.prijs = prijs
@@ -163,7 +163,7 @@ class Voertuig:
 
 class Belasting:
 
-    def __init__(self, persoon, voertuig, huishouden_personen, fiscale_partner):
+    def __init__(self, persoon, voertuig, huishouden_personen, fiscale_partner, **kwargs):
         """
         Verschillende belastingen worden hier berekend op basis van persoons/voertuigs gegevens
 

@@ -36,8 +36,17 @@ def main_page():
         data['submitted'] = True  # Add hardcoded variables, for example to show whether the form has already been submitted
 
         # Process input with logic
-        data['number_range'] = get_next_ten_numbers(data['number2'])
-        plots['example_plot'] = create_plot(data['number1'])
+        mens = Persoon(**data)
+        auto = Voertuig(mens, **data)
+        tax = Belasting(mens, auto, **data)
+        resultaat = Calculation(mens, auto, tax)
+        resultaat.get_auto()
+        resultaat.get_loon()
+        resultaat.get_BTW()
+        #resultaat.show('both')
+
+        data['number_range'] = get_next_ten_numbers(data['uitgaven_laag'])
+        plots['example_plot'] = create_plot(data['uitgaven_hoog'])
 
     data['errors'] = form.get_errors()  # Relay errors, can be usefull for debugging
 
@@ -48,13 +57,4 @@ def show_page2():
     return render_template('page2.html', title='Page2')
 
 if __name__ == '__main__':
-    # start the app
-    # boris = Persoon('5531vg', 25, 2500, 10000, 300, 600, 2000, 35000, 1500, 3000, 93)
-    # auto = Voertuig(boris, '85tdpv', 2500, 20000)
-    # tax = Belasting(boris, auto, 2, 0)
-    # resultaat = Calculation(boris, auto, tax)
-    # resultaat.get_auto()
-    # resultaat.get_loon()
-    # resultaat.get_BTW()
-    # resultaat.show('both')
     app.run(debug=True)
