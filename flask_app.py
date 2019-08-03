@@ -49,9 +49,7 @@ def main_page():
         data['submitted'] = True  # Add hardcoded variables, for example to show whether the form has already been submitted
 
         # Process input with logic
-        data['number_range'] = get_next_ten_numbers(data['number2'])
-        plots['example_plot'] = create_plot(data['number1'])
-        data['results'] =  get_results()
+        data['results'] =  get_results(data)
         plots['sankey_plot'] =  make_sankey(data['results'])
 
     data['errors'] = form.get_errors()  # Relay errors, can be usefull for debugging
