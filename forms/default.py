@@ -11,10 +11,26 @@ from wtformsparsleyjs import StringField, SelectMultipleField, BooleanField, Sel
 class DefaultForm(FlaskForm):
     # General Settings
     name = StringField('Write your name', [InputRequired()],
-                                render_kw={"placeholder": "Just your name"}, default="Timo")
+                                render_kw={"placeholder": "Just your name"}, default="Simon")
 
     number1 = IntegerField('Pick a number', default=4)
     number2 = IntegerField('Pick a number between 1000 and 2000', [NumberRange(1000, 2000)], default=1019)
+    number3 = IntegerField('Pick a number between 1000 and 2000', [NumberRange(1000, 2000)], default=1019)
+    provincies = [
+                    ("Groningen","Groningen"),
+                    ("Friesland","Friesland"),
+                    ("Drenthe","Drenthe"),
+                    ("Overijssel","Overijssel"),
+                    ("Flevoland","Flevoland"),
+                    ("Gelderland","Gelderland"),
+                    ("Utrecht","Utrecht"),
+                    ("NoordHolland","Noord-Holland"),
+                    ("ZuidHolland","Zuid-Holland"),
+                    ("Zeeland","Zeeland"),
+                    ("NoordBrabant","Noord-Brabant"),
+                    ("Limburg","Limburg")
+                    ]
+    provincie = SelectField('Provincies', choices=provincies)
 
     example_boolean = BooleanField('Example Boolean', default=False)
 
