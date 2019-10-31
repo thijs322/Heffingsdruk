@@ -49,7 +49,7 @@ class Persoon:
         self.loon_totaal = self.bruto_loon_jr + self.loon_speciaal
 
         '''
-        Informatie over de woonplaats van de persoon (stad, gemeente, provincie) 
+        Informatie over de woonplaats van de persoon (stad, gemeente, provincie)
         wordt automatisch opgehaald aan de hand van de postcode
         '''
         print('Getting location data ...')
